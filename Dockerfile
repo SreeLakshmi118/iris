@@ -2,7 +2,7 @@
 FROM python:3.11.2
 
 # Set the working directory inside the container
-WORKDIR /visionapp
+WORKDIR /vision
 
 # Install system dependencies
 
@@ -16,7 +16,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Set the environment variable for Python
-ENV PYTHONPATH=/visionapp
+ENV PYTHONPATH=/vision
 
 # Set the startup command to run the Django application
-CMD ["python", "manage.py", "runserver", "0.0.0.0:80"]
+CMD ["python", "vision/manage.py", "runserver", "0.0.0.0:80"]
