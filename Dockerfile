@@ -2,7 +2,7 @@
 FROM python:3.11.2
 
 # Set the working directory inside the container
-WORKDIR /vision
+# WORKDIR /vision
 
 # Install system dependencies
 
