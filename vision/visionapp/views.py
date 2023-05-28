@@ -27,7 +27,7 @@ def index(request):
             
             if user.is_superuser:
                 auth.login(request, user)
-                return redirect('http://127.0.0.1:8000/admin/')
+                return redirect('https://irismain.azurewebsites.net/admin/')
             else:
                 auth.login(request, user)
                 return redirect('main')
