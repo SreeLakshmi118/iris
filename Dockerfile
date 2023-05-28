@@ -19,4 +19,4 @@ COPY . .
 ENV PYTHONPATH=/visionapp
 
 # Set the startup command to run the Django application
-CMD ["python", "visionapp/manage.py", "runserver", "0.0.0.0:80"]
+CMD ["python", "manage.py", "runserver", "0.0.0.0:80"]
