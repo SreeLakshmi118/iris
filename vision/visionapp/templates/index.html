@@ -1,0 +1,103 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zxx">
+<head>
+    <title>Login Here!!</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8" />
+    <link href="//fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" type="text/css" media="all" />
+    <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}" type="text/css" media="all">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/annyang/2.6.1/annyang.min.js"></script>
+
+</head>
+<body>
+    <section class="w3l-hotair-form">
+        <h1>Login Here</h1>
+        <div class="container">
+            <div class="workinghny-form-grid">
+                <div class="main-hotair">
+                    <div class="content-wthree">
+                        <h2>Log In</h2>
+                        {% if messages %}
+                        {% for message in messages %}
+                        <div class="alert alert-danger" role="alert">
+                            <script>
+                                const voices = window.speechSynthesis.getVoices();
+                                const speech = new SpeechSynthesisUtterance();
+                                speech.voice = voices[1];
+                                speech.text = '{{ message }} try again with another credentials';
+                                window.speechSynthesis.speak(speech);
+                                // reload page after 5 seconds
+                                setTimeout(function() {
+                                    location.reload();
+                                }, 2000);
+
+                            </script>
+                        </div>
+                        {% endfor %}
+                        {% endif %}
+
+                        <form id="login-form" action="{% url 'index' %}" method="post">
+                            {% csrf_token %}
+                            <input type="text" id="username" class="text" name="uname" placeholder="User Name">
+                            <input type="password" id="password" class="password" name="password" placeholder="User Password">
+                            <button class="btn" type="submit" name="submit" id="submit">Log In</button>
+                        </form>
+                        <p class="account">Don't have an account? <a id="register" href="{% url 'register' %}">Register</a></p>
+                    </div>
+                    <div class="w3l_form align-self">
+                        <div class="left_grid_info">
+                            <img src="{% static 'images/1.png' %}" alt="" class="img-fluid">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script>
+        const speech = new SpeechSynthesisUtterance();
+        window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        const recognition = new window.SpeechRecognition();
+        annyang.addCommands({
+          'login': function() {
+            speech.text = 'Please say your username.';
+            window.speechSynthesis.speak(speech);
+          },
+          'username is :username': function(username) {
+              speech.text = 'Your username is ' + username + '. Please say your password.';
+            document.getElementById('username').value = username;
+            window.speechSynthesis.speak(speech);
+          },
+          'password is :password': function(password) {
+              speech.text = 'Your password is ' + password + '. Please say submit to login. cancel to cancel the login.';
+            document.getElementById('password').value = password;
+            window.speechSynthesis.speak(speech);
+          },
+          'cancel': function() {
+            speech.text = 'Logging in cancelled';
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            window.speechSynthesis.speak(speech);
+          },
+          
+          'submit': function() {
+            speech.text = 'Logging in';
+            document.getElementById('submit').click();
+            window.speechSynthesis.speak(speech);
+          },
+          'register':function(){
+            document.getElementById('register').click();
+          }
+        });
+        speech.text = 'Welcome to the login page. Please say your login for login or register for register.';
+        window.speechSynthesis.speak(speech);
+        annyang.start();
+        recognition.start();
+        recognition.onresult = function(event) {
+          const speech = event.results[event.resultIndex][0].transcript;
+          annyang.trigger(speech);
+        };
+      </script>
+</body>
+</html

@@ -1,0 +1,138 @@
+{% load static %}
+<!--
+Author: W3layouts
+Author URL: http://w3layouts.com
+-->
+<!DOCTYPE html>
+<html lang="zxx">
+
+<head>
+    <title>Register Here!!</title>
+    <!-- Meta tag Keywords -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8" />
+    <meta name="keywords"
+        content="Report Login Form Responsive web template, Bootstrap Web Templates, Flat Web Templates, Android Compatible web template, Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyEricsson, Motorola web design" />
+    <!-- //Meta tag Keywords -->
+    <link href="//fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <!--/Style-CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" type="text/css" media="all" />
+    <!--//Style-CSS -->
+
+    <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}" type="text/css" media="all">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/annyang/2.6.1/annyang.min.js"></script>
+
+</head>
+
+<body>
+
+    <section class="w3l-hotair-form">
+        <h1>Register Here!!!</h1>
+        <div class="container">
+            <!-- /form -->
+            <div class="workinghny-form-grid">
+                <div class="main-hotair">
+                    <div class="content-wthree">
+                        <h2>Register!!</h2>
+                        {% if messages %}
+                        {% for message in messages %}
+                        <div class="alert alert-danger" role="alert">
+                            <script>
+                                const speech = new SpeechSynthesisUtterance();
+                                speech.text = '{{ message }} try again with another username';
+                                window.speechSynthesis.speak(speech);
+                                // reload page after 5 seconds
+                                setTimeout(function() {
+                                    location.reload();
+                                }, 2000);
+
+                            </script>
+                        </div>
+                        {% endfor %}
+                        {% endif %}
+                        <form action="register" method="post">
+                            {% csrf_token %}
+                            <input type="text" class="text" name="uname" placeholder="User Name" id="username">
+                            <input type="password" class="password" name="password" placeholder="User Password" id="password">
+                            <input type="password" class="password" name="cpassword" placeholder="confirm Password" id="confirmpassword">
+                            <button class="btn" type="submit" name="submit" id="submit">Register</button>
+                        </form>
+                        
+                        <p class="account">Already have an account? <a id="login" href="{% url 'index' %}">Login</a></p>
+                    </div>
+                    <div class="w3l_form align-self">
+                        <div class="left_grid_info">
+                            <img src="{% static 'images/1.png' %}" alt="" class="img-fluid">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-danger" role="alert">
+        {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
+    <script>
+        const speech = new SpeechSynthesisUtterance();
+        window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        const recognition = new window.SpeechRecognition();
+        annyang.addCommands({
+            'register': function() {
+              speech.text = 'Please say your username by saying "username is" followed by username to get started.';
+              window.speechSynthesis.speak(speech);
+            },
+            'username is :username': function(username) {
+            speech.text = 'Your username is ' + username + '. Please say your password by saying "password is" followed by your password.';
+            document.getElementById('username').value = username;
+            window.speechSynthesis.speak(speech);
+            },
+            'password is :password': function(password) {
+            speech.text = 'Your password is ' + password + '. Please confirm your password by saying "confirm password is" followed by your password.';
+            document.getElementById('password').value = password;
+            window.speechSynthesis.speak(speech);
+            },
+            'confirm password is :password': function(confirmpassword) {
+            document.getElementById('confirmpassword').value = confirmpassword;
+            if (confirmpassword === document.getElementById('password').value) {
+              speech.text = 'Your password is confirmed. Please say "submit" to complete the registration.';
+              window.speechSynthesis.speak(speech);
+            } else {
+              speech.text = 'Password does not match. Please say your password again.';
+              document.getElementById('password').value = '';
+              window.speechSynthesis.speak(speech);
+            }
+            },
+            'cancel':function(){
+                speech.text = 'Registration cancelled. Please say "register" to start the registration again.';
+                document.getElementById('username').value = '';
+                document.getElementById('password').value = '';
+                document.getElementById('confirmpassword').value = '';
+                window.speechSynthesis.speak(speech);
+            },
+            'submit': function() {
+                speech.text = 'Submitting your registration. Please wait...';
+                document.getElementById('submit').click();
+                window.speechSynthesis.speak(speech);
+
+            },
+            'login': function() {
+                speech.text = 'Redirecting to login page. Please wait...';
+                document.getElementById('login').click();
+                window.speechSynthesis.speak(speech);
+            }
+        });
+        speech.text = 'Welcome to the registration page. Please say "register" to start the registration. Already have an account? Please say "login" to login. cancel to cancel the registration.';
+        window.speechSynthesis.speak(speech);
+        annyang.start();
+        recognition.start();
+        recognition.onresult = function(event) {
+          const speech = event.results[event.resultIndex][0].transcript;
+          annyang.trigger(speech);
+        };
+      </script>
+</body>
+</html>

@@ -1,0 +1,403 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
+    <link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css"/>
+    <link rel="stylesheet" href="{% static 'css/styleb.css.css' %}"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/annyang/2.6.1/annyang.min.js"></script>
+
+
+    <script>
+      
+      const speech = new SpeechSynthesisUtterance();
+      window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      const recognition = new window.SpeechRecognition();
+      annyang.addCommands({
+        'logout': function() {
+          speech.text = 'logouting';
+          document.getElementById('logout').click();
+          window.speechSynthesis.speak(speech);
+        },
+        'book':function(){
+        //  clear the language and genre from session storage
+          if (sessionStorage.getItem('language')) {
+            sessionStorage.removeItem('language');
+          }
+          if (sessionStorage.getItem('genre')) {
+            sessionStorage.removeItem('genre');
+          }
+
+         speech.text="gettings to book world specify the genre and language followed by genre is x and language is y";
+         window.speechSynthesis.speak(speech);
+         speech.text="genres are";
+         window.speechSynthesis.speak(speech);
+         var genres = document.querySelectorAll('.genre');
+         genres.forEach(function(genre) {
+         var speech = new SpeechSynthesisUtterance(genre.innerHTML);
+         window.speechSynthesis.speak(speech);
+        });
+        speech.text="languages are";
+        window.speechSynthesis.speak(speech);
+        var languages = document.querySelectorAll('.language');
+        languages.forEach(function(language) {
+        var speech = new SpeechSynthesisUtterance(language.innerHTML);
+        window.speechSynthesis.speak(speech);
+        });
+        },
+        'home':function(){
+         speech.text="loading home page";
+         document.getElementById('home').click()
+         window.speechSynthesis.speak(speech)
+        },
+        
+        'gk':function(){
+         speech.text="loading quiz";
+         document.getElementById('quiz').click()
+         window.speechSynthesis.speak(speech)
+        },
+        'language is *y': function(y) {
+        y = y.toLowerCase();
+        var languages = document.querySelectorAll('.language');
+        var flag = false;
+        languages.forEach(function(language) {
+          if (language.innerHTML.toLowerCase() === y) {
+            flag = true;
+          }
+        });
+        if (flag) {
+          sessionStorage.setItem('language', y);
+          if (sessionStorage.getItem('genre')) {
+            var language = sessionStorage.getItem('language');
+            var genre = sessionStorage.getItem('genre');
+            speech.text = 'Loading books say list for list of books';
+            window.speechSynthesis.speak(speech);
+            const url = `/search/${encodeURIComponent(language)}/${encodeURIComponent(genre)}`;
+            window.location.href = url;
+          } else {
+            speech.text = 'Language selected, please say "type is x". For example, say "type is fiction".';
+            window.speechSynthesis.speak(speech);
+          }
+        } else {
+          speech.text = 'Please say "select language y". For example, say "select language English".';
+          window.speechSynthesis.speak(speech);
+        }
+      },
+      'type is *x': function(x) {
+        x = x.toLowerCase();
+        var genres = document.querySelectorAll('.genre');
+        var flag = false;
+        genres.forEach(function(genre) {
+          if (genre.innerHTML.toLowerCase() === x) {
+            flag = true;
+          }
+        });
+        if (flag) {
+          sessionStorage.setItem('genre', x);
+          if (sessionStorage.getItem('language')) {
+            var language = sessionStorage.getItem('language');
+            var genre = sessionStorage.getItem('genre');
+            speech.text = 'Loading books say list for list of books';
+            window.speechSynthesis.speak(speech);
+            const url = `/search/${encodeURIComponent(language)}/${encodeURIComponent(genre)}`;
+            window.location.href=url;
+          } else {
+            speech.text = 'Genre selected, please say "language is y". For example, say "language is English".';
+            window.speechSynthesis.speak(speech);
+          }
+        } else {
+          if (sessionStorage.getItem('language')) {
+            speech.text = 'Please say "type is x". For example, say "type is fiction".';
+            window.speechSynthesis.speak(speech);
+          } else {
+            speech.text = 'Please say "select language y". For example, say "select language English".';
+            window.speechSynthesis.speak(speech);
+          }
+        }
+      },
+      'list':function(){
+        speech.text="books are listed below say play followed by book name to play the book";
+         window.speechSynthesis.speak(speech);
+         speech.text="books are";
+         window.speechSynthesis.speak(speech);
+         var genres = document.querySelectorAll('.readbook');
+         genres.forEach(function(genre) {
+         var speech = new SpeechSynthesisUtterance(genre.innerHTML);
+         window.speechSynthesis.speak(speech);
+      });
+
+    },
+    // 'play *x':function(x){
+    //   x = x.toLowerCase();
+      
+    //   var genres = document.querySelectorAll('.readbook');
+    //   var flag = false;
+    //   genres.forEach(function(genre) {
+    //     if (genre.innerHTML.toLowerCase() === x) {
+    //       flag = true;
+    //     }
+    //   });
+    //   if (flag) {
+    //     speech.text = 'Playing book';
+    //     window.speechSynthesis.speak(speech);
+    //     var books = document.querySelectorAll('.readbook');
+    //     books.forEach(function(book) {
+    //       if (book.innerHTML.toLowerCase() === x) {
+            
+    //         var booksData = document.getElementById("books-data").getAttribute("data-books");
+    //         var books = JSON.parse(booksData);
+    //         for (var i = 0; i < books.length; i++) {
+    //         if (books[i].name === x) {
+    //           bookId = books[i].id;
+    //           playAudio(bookId);
+    //           break;
+    //         }
+    //       }
+            
+    //       }
+    //     });
+    //   } else {
+    //     speech.text = 'Please say "play x". For example, say "play harry potter".';
+    //     window.speechSynthesis.speak(speech);
+    //   }
+    // },
+    // 'resume':function(){
+    //   speech.text="resuming";
+    //   window.speechSynthesis.speak(speech);
+    //   resume(sessionStorage.getItem('getid'));
+    // },
+    // 'pause':function(){
+    //   speech.text="pausing";
+    //   window.speechSynthesis.speak(speech);
+    //   pause(sessionStorage.getItem('getid'));
+    // },
+    // 'stop':function(){
+    //   speech.text="stopping";
+    //   window.speechSynthesis.speak(speech);
+    //   stop(sessionStorage.getItem('getid'));
+    // },
+
+      });
+        
+      speech.text = 'Welcome to the IRIS world of books. say logout for logout,book for books, home for home page and gk for quiz section, say book for accessing booksc';
+      window.speechSynthesis.speak(speech);
+      annyang.start();
+      recognition.start();
+      recognition.onresult = function(event) {
+        const speech = event.results[event.resultIndex][0].transcript;
+        annyang.trigger(speech);
+      };
+    </script>
+
+    <title>Book Store</title>
+   
+    
+  </head>
+  
+    <body>
+    <!-- begin header section  -->
+    <header class="header">
+      <main class="header-1">
+        <a href="#" class="logo"> <i class="fas fa-book"></i>AUDIO BOOK STORE</a>
+      </main>
+      <main class="header-2">
+        <nav class="nav-bar">
+          <a href="#home">Home</a>
+          <a  id="book" href="#featured">Books</a>
+
+          
+          {% if user.is_authenticated %}
+
+          <a  id="logout" href="{% url 'logout' %}">Logout</a>
+          <a id="home" href="{% url 'main' %}">Go to Home Page</a>
+          <a id="q" href="{% url 'quiz' %}">Quiz</a>
+
+          <a style="color: #fff;">Welcome Back {{request.user.username}}</a>
+          {% else %}
+        </nav>
+        {% endif %}
+      </main>
+    </header>
+    <!-- end header section -->
+
+    <!-- footer begin -->
+    <div class="aside">
+      <a href="#home" class="fas fa-home"></a>
+      <a href="#featured" class="fas fa-list"></a>
+      <a href="#arrivals" class="fas fa-tags"></a>
+      <a href="#reviews" class="fas fa-comments"></a>
+      <a href="#blogs" class="fas fa-blogs"></a>
+    </div>
+    <!-- footer end -->
+    
+    <!-- home section begin  -->
+    <section id="home" class="section home">
+      <main class="row">
+        <div class="content">
+          <h3>IRIS World of Books</h3>
+          <p>
+            A book is a garden, an orchard, a storehouse, a party, a company by the way, a counselor, a multitude of counselors.
+          </p>
+         
+        </div>
+        <div class="swiper books-slider">
+          <div class="swiper-wrapper">
+            <a href="#" class="swiper-slide"
+              ><img src="{% static 'images/book-1.png' %}" alt="book"
+            /></a>
+            <a href="#" class="swiper-slide"
+              ><img src="{% static 'images/book-2.png' %}" alt="book"
+            /></a>
+            <a href="#" class="swiper-slide"
+              ><img src="{% static 'images/book3.png' %}" alt="book"
+            /></a>
+            <a href="#" class="swiper-slide"
+              ><img src="{% static 'images/book-4.png' %}" alt="book"
+            /></a>
+            <a href="#" class="swiper-slide"
+              ><img src="{% static 'images/book-5.png' %}" alt="book"
+            /></a>
+            <a href="#" class="swiper-slide"
+              ><img src="{% static 'images/book-6.png' %}" alt="book"
+            /></a>
+          </div>
+          <img src="{% static 'images/stand.png' %}" class="stand" alt="stand" />
+        </div>
+      </main>
+    </section>
+
+        <section class="reviews" id="reviews">
+          <h1 class="heading reviews-heading"><span>FIND YOURS...!!!</span></h1>
+    
+          <div class="swiper reviews-slider">
+            <div class="swiper-wrapper">
+              {% for i in gen %}
+              <a href="{% url 'gencustomize' i.id %}">
+                <div class="swiper-slide box">
+                  <img src="{{i.genimg.url}}" alt="" />
+                  <h3 class="genre">{{i.genre}}</h3>
+                  <p>
+                    {{i.gendesc}}
+                  </p>
+                  
+                </div>
+              </a>
+              {% endfor %}
+              
+              </div>
+            </div>
+          </div>
+        </section>
+
+        
+         <section class="reviews" id="reviews">
+          <h1 class="heading reviews-heading"><span>FIND YOUR LANGUAGE</span></h1>
+    
+          <div class="swiper reviews-slider">
+            <div class="swiper-wrapper">
+              {% for j in lan %}
+              <a href="{% url 'langcustomize' j.id %}">
+             
+                <div class="swiper-slide box">
+                  <img src="{{j.langimg.url}}" alt="" />
+                  <h3 class="language">{{j.language}}</h3>
+                  <p>
+                    {{j.langdesc}}
+                  </p>
+                  
+                </div>
+              </a>
+              {% endfor %}
+               
+              </div>
+            </div>
+          </div>
+        </section> 
+    
+        <!-- reviews section ends -->
+   
+
+    <!-- section featured begin  -->
+    <section class="featured" id="featured" >
+      <h1 class="heading"><span>Audible Books</span></h1>
+      <div class="swiper featured-slider" style="display: flex;">
+      
+       
+        {% for s in obj %}
+        <div class="swiper-slide box">
+            
+            <div class="image">
+              <img style="height: 200px;" src="{{s.img.url}}"/>
+            </div>
+            <div class="content">
+              <h3 class="readbook">{{s.name}}</h3>
+              <div class="price">{{s.author}}</div>
+              <audio id="{{s.id}}" controls>
+                <source  src="{{s.audio.url}}" type="audio/ogg">
+                <!-- <source src="{{i.audio.url}}" type="audio/mpeg"> -->
+                </audio>
+                <button onclick="playAudio('{{s.id}}')">Play</button>
+                <button onclick="pause('{{s.id}}')">Pause</button>
+                <button onclick="stop('{{s.id}}')">Stop</button>
+                <button onclick="resume('{{s.id}}')">Resume</button>
+                
+                <script>
+                  var currentAudio = null;
+                  function playAudio(audioId) {
+
+                    const audio = document.getElementById(audioId);
+                    if (currentAudio && !currentAudio.paused) {
+                      currentAudio.pause();
+                    }
+                    currentAudio = audio;
+                    audio.play();
+                  }
+                  function play(id){
+                    var audio = document.getElementById(id);
+                    audio.play();
+                  }
+                  function pause(id){
+                    var audio = document.getElementById(id);
+                    audio.pause();
+                  }
+                  function stop(id){
+                    var audio = document.getElementById(id);
+                    audio.pause();
+                    audio.currentTime = 0;
+                  }
+                  function resume(id){
+                    var audio = document.getElementById(id);
+                    audio.play();
+                  }
+                </script>
+           
+              <!-- <a href="#" class="btn">add to cart</a> -->
+            </div>
+          </div>
+        <div class="swiper-button-next"></div>
+        {% endfor %}
+        <div class="swiper-button-prev"></div>
+      </div>
+    </section>
+
+
+
+    
+    <!-- section featured end  -->
+
+
+
+    
+    <!-- loader begin -->
+    <div class="loader-container">
+      <img src="{% static 'images/loader2.gif' %}" alt="loader">
+    </div>
+      <!-- loader end -->
+    <script src="https://unpkg.com/swiper@7/swiper-bundle.min.js"></script>
+    <script src="{% static 'js/index.js' %}"></script>
+   
+  </body>
+</html>
