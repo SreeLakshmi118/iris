@@ -10,7 +10,7 @@ WORKDIR /visionapp
 COPY requirements.txt .
 
 # Install the Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirments.txt
 
 # Copy the entire project directory to the container
 COPY . .
