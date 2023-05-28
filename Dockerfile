@@ -7,7 +7,7 @@ WORKDIR /visionapp
 # Install system dependencies
 
 # Copy the requirements.txt file to the container
-COPY requirements.txt .
+COPY requirments.txt .
 
 # Install the Python dependencies
 RUN pip install --no-cache-dir -r requirments.txt
