@@ -11,7 +11,6 @@ from django.http import HttpResponse
 
 # Create your views here.
 import speech_recognition as sr
-import pyautogui
 from datetime import datetime, timedelta
 
 
