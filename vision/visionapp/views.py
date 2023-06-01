@@ -68,46 +68,18 @@ def logout(request):
 import json  
 @login_required(login_url='index')
 def book(request):
-    if request.method == 'POST':
-        r = sr.Recognizer()
-        with sr.Microphone() as source:
-            print('Listening...')
-            audio = r.listen(source)
-        try:
-            command = r.recognize_google(audio)
-            print('You said:', command)
-            if 'show books' in command:
-                obj = Reads.objects.all()
-            elif 'show genre' in command:
-                gen = ReadGenre.objects.all()
-                return HttpResponse(gen)
-            elif 'show language' in command:
-                lan = language.objects.all()
-                return HttpResponse(lan)
-            else:
-                return HttpResponse('Sorry, I did not understand that.')
-            context = {
-                'obj': obj,
-                'gen': gen,
-                'lan': lan,
-            }
-            return render(request, 'book.html', context)
-        except sr.UnknownValueError:
-            print('Speech Recognition could not understand audio')
-        except sr.RequestError as e:
-            print('Could not request results from Speech Recognition service; {0}'.format(e))
-    else:
-        request.session['gen'] = None
-        request.session['lan'] = None
-        obj = Reads.objects.all()
-        gen = ReadGenre.objects.all()
-        lan = language.objects.all()
-        context = {
-            'obj': obj,
-            'gen': gen,
-            'lan': lan,
-        }
-        return render(request, 'book.html', context)
+    
+    request.session['gen'] = None
+    request.session['lan'] = None
+    obj = Reads.objects.all()
+    gen = ReadGenre.objects.all()
+    lan = language.objects.all()
+    context = {
+        'obj': obj,
+        'gen': gen,
+        'lan': lan,
+    }
+    return render(request, 'book.html', context)
 
 
 def gencust(request, id1):
@@ -127,7 +99,7 @@ def gencust(request, id1):
     return render(request, 'book.html', context)
 
 def search(request,lang,gen):
-    obj = Reads.objects.filter(genre__genre__iexact=gen.lower(), language__language__iexact=lang.lower())
+    obj = Reads.objects.filter(genre__genre__icontaines=gen.lower(), language__language__icontains=lang.lower())
     gen=ReadGenre.objects.all()
     lan=language.objects.all()
     context={
@@ -208,11 +180,6 @@ def quiz_results(request):
     else:
         return redirect('quiz')
             
-
-
-
-
-
 def quiz_view(request):
     questions = QuizQuestion.objects.all()
     context = {'questions': questions}
