@@ -15,7 +15,7 @@ admin.site.register(ReadGenre, ReadGenreAdmin)
 
 class languageAdmin(admin.ModelAdmin):
      list_display = ['language']
-     # readonly_fields = ['language']
+     readonly_fields = ['language']
 admin.site.register(language, languageAdmin)
 
 class QuizQuestionAdmin(admin.ModelAdmin):
